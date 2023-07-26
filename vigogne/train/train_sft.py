@@ -217,6 +217,7 @@ def train():
         torch_dtype=torch.float16,
         load_in_8bit=model_args.load_in_8bit,
         device_map={"": Accelerator().process_index},
+        trust_remote_code=True,
         use_cache=not training_args.gradient_checkpointing,
     )
 
@@ -338,7 +339,7 @@ def train():
         data_collator=DataCollatorForSupervisedDataset(
             tokenizer=tokenizer, pad_to_multiple_of=8 if training_args.fp16 else None
         ),
-        callbacks=[SavePeftModelCallback, LoadBestPeftModelCallback],
+        callbacks=[SavePeftModelCallback],  # , LoadBestPeftModelCallback],
     )
 
     # Comment to stay with new version of PEFT
