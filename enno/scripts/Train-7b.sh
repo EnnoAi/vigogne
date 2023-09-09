@@ -1,15 +1,17 @@
 python vigogne/train/train_sft.py \
---model_name_or_path "/mnt/ntfs1/models/vigogne2-13b-instruct" \
+--model_name_or_path "/mnt/ssd/models/hf/vigogne2-7b-instruct" \
 --train_file "./enno/datasets/data-train.jsonl" \
---eval_file ./enno/datasets/data-eval.jsonl \
---output_dir ./enno/outputs/vigogne2-enno-13b-sft-lora-4bit \
---run_name vigogne2-enno-13b-sft-lora \
+--eval_file "./enno/datasets/data-eval.jsonl" \
+--output_dir ./enno/outputs/vigogne2-enno-7b-sft-lora-8bit \
+--run_name vigogne2-enno-7b-sft-lora \
 --overwrite_output_dir \
 --mode instruct \
 --model_max_length 2048 \
 --preprocessing_num_workers 4 \
 --dataloader_num_workers 1 \
---load_in_4bit \
+--block_size 512 \
+--pack_into_block \
+--load_in_8bit \
 --lora_r 8 \
 --lora_alpha 16 \
 --lora_dropout 0.05 \
@@ -22,7 +24,7 @@ python vigogne/train/train_sft.py \
 --warmup_ratio 0.05 \
 --weight_decay 0.01 \
 --gradient_checkpointing \
---logging_steps 5 \
+--logging_steps 1 \
 --logging_first_step true \
 --save_strategy steps \
 --save_steps 5 \
@@ -33,12 +35,21 @@ python vigogne/train/train_sft.py \
 --do_train \
 --do_eval \
 --compute_dtype bfloat16 \
---fp16 yes \
---block_size 512 \
---pack_into_block \
 --load_best_model_at_end yes
 
-# --compute_dtype float16 \
-# --fp16 yes \
-# --block_size 512 \
-# --pack_into_block \
+# Merge
+python ./scripts/merge_lora_weights.py \
+./enno/outputs/vigogne2-enno-7b-sft-lora-8bit \
+./enno/models/vigogne2-enno-7b-sft-lora-8bit
+
+
+#################################
+# ### System:
+# Blabla
+#
+# ### Instruction:
+# Blabla
+#
+# ### Response:\n
+#
+################################
