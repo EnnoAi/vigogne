@@ -46,4 +46,20 @@ with open(filename + '-eval.jsonl', 'w') as f:
     for x in eval_instruct:
         f.write(json.dumps(x) + '\n')
 
-d = datasets.Dataset.from_json('./datasets/enno-data/data-train.json')
+# Création Chat jsonl
+with open(filename + '-train-chat.jsonl', 'w') as f:
+    for i, x in enumerate(train_instruct):
+        d = {"id": f"{filename}-train-chat-{i}",
+             "conversation": [{"role": "USER", "content": x['instruction']},
+                              {"role": "ASSISTANT", "content": x['output']}]}
+        f.write(json.dumps(d) + '\n')
+
+with open(filename + '-eval-chat.jsonl', 'w') as f:
+    for i, x in enumerate(eval_instruct):
+        d = {"id": f"{filename}-eval-chat-{i}",
+             "conversation": [{"role": "USER", "content": x['instruction']},
+                              {"role": "ASSISTANT", "content": x['output']}]}
+        f.write(json.dumps(d) + '\n')
+
+d = datasets.Dataset.from_json(filename + '-train.jsonl')
+d = datasets.Dataset.from_json(filename + '-train-chat.jsonl')
